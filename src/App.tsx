@@ -1,31 +1,31 @@
-import * as React from "react";
-import "./styles.css";
-import { createStore } from "redux";
-import { Provider, useDispatch, useSelector } from "react-redux";
+import * as React from 'react';
+import './styles.css';
+import { createStore } from 'redux';
+import { Provider, useDispatch, useSelector } from 'react-redux';
 
 // ---- Types ----
 
-const TYPE_INCREMENT = "TYPE_INCREMENT" as const;
-const TYPE_REPLACE = "TYPE_REPLACE" as const;
+const TYPE_INCREMENT = 'TYPE_INCREMENT' as const;
+const TYPE_REPLACE = 'TYPE_REPLACE' as const;
 
 // ---- Actions ----
 
 const incrementAction = () => ({
-  type: TYPE_INCREMENT
+  type: TYPE_INCREMENT,
 });
 
 const clearAction = () => ({
   type: TYPE_REPLACE,
   payload: {
-    count: 0
-  }
+    count: 0,
+  },
 });
 
 const replaceAction = (num: number) => ({
   type: TYPE_REPLACE,
   payload: {
-    count: num
-  }
+    count: num,
+  },
 });
 
 // ---- Action Types ----
@@ -42,7 +42,7 @@ type GrobalState = {
 };
 
 const initialGrobalState: GrobalState = {
-  count: 0
+  count: 0,
 };
 
 // ---- Reducer ----
@@ -64,12 +64,12 @@ const Reducer = (
 // ---- Counter Component ----
 
 const Label: React.FC<{ count: number }> = React.memo(({ count }) => {
-  console.log("## Label");
+  console.log('## Label');
   return <span>count: {count}</span>;
 });
 
 const AddButton: React.FC = React.memo(() => {
-  console.log("## AddButton");
+  console.log('## AddButton');
   const dispatch = useDispatch();
   const handleClick = () => {
     dispatch(incrementAction());
@@ -78,7 +78,7 @@ const AddButton: React.FC = React.memo(() => {
 });
 
 const ReplaceButton: React.FC = React.memo(() => {
-  console.log("## ReplaceButton");
+  console.log('## ReplaceButton');
   const fixValue = 999;
   const dispatch = useDispatch();
   const handleClick = () => {
@@ -88,7 +88,7 @@ const ReplaceButton: React.FC = React.memo(() => {
 });
 
 const ClearButton: React.FC = React.memo(() => {
-  console.log("## ClearButton");
+  console.log('## ClearButton');
   const dispatch = useDispatch();
   const handleClick = () => {
     dispatch(clearAction());
@@ -97,7 +97,7 @@ const ClearButton: React.FC = React.memo(() => {
 });
 
 const Counter: React.FC = () => {
-  console.log("# Counter");
+  console.log('# Counter');
   const count = useSelector((state: GrobalState) => state.count);
   return (
     <>
