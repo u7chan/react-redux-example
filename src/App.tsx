@@ -6,7 +6,7 @@ import {
   applyMiddleware,
   MiddlewareAPI,
   Dispatch,
-  AnyAction,
+  AnyAction as ReAction,
 } from 'redux';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 
@@ -19,25 +19,25 @@ const TYPE_LOADING = 'TYPE_LOADING' as const;
 
 // ---- Actions ----
 
-const incrementAction = (): AnyAction => ({
+const incrementAction = (): ReAction => ({
   type: TYPE_INCREMENT,
 });
 
-const clearAction = (): AnyAction => ({
+const clearAction = (): ReAction => ({
   type: TYPE_REPLACE,
   payload: {
     count: 0,
   },
 });
 
-const replaceAction = (num: number): AnyAction => ({
+const replaceAction = (num: number): ReAction => ({
   type: TYPE_REPLACE,
   payload: {
     count: num,
   },
 });
 
-const restGetOneAction = (resources: string, params?: Object): AnyAction => ({
+const restGetOneAction = (resources: string, params?: Object): ReAction => ({
   type: TYPE_REST_GET_ONE,
   payload: {
     resources,
@@ -45,7 +45,7 @@ const restGetOneAction = (resources: string, params?: Object): AnyAction => ({
   },
 });
 
-const loadingAction = (loading: boolean) => ({
+const loadingAction = (loading: boolean): ReAction => ({
   type: TYPE_LOADING,
   payload: {
     loading,
@@ -106,14 +106,14 @@ const Reducer = (
 
 type Interceptor = {
   type: string;
-  handler: (state: GrobalState, action: AnyAction) => Promise<AnyAction>;
+  handler: (state: GrobalState, action: Actions) => Promise<Actions>;
 };
 
 const createMiddleware = (interceptors: Interceptor[]) => (
   store: MiddlewareAPI
-) => (next: Dispatch) => async (action: AnyAction): Promise<void> => {
+) => (next: Dispatch) => async (action: Actions): Promise<void> => {
   console.log('# Middleware');
-  const newAction = await new Promise<AnyAction>(async (resolve) => {
+  const newAction = await new Promise<Actions>(async (resolve) => {
     const interceptor = interceptors.find((it) => it.type === action.type);
     resolve(
       interceptor ? await interceptor.handler(store.getState(), action) : action
@@ -127,7 +127,7 @@ const createMiddleware = (interceptors: Interceptor[]) => (
 const interceptors: Interceptor[] = [
   {
     type: TYPE_REST_GET_ONE,
-    handler: async (state: GrobalState, action: AnyAction) => {
+    handler: async (state: GrobalState, action: Actions) => {
       const { resources, params } = action.payload;
       const payload = { count: await fetchGetOneFake(resources, params) };
       return { ...action, payload };
