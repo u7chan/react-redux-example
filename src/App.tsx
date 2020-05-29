@@ -111,16 +111,15 @@ type Interceptor = {
 
 const createMiddleware = (interceptors: Interceptor[]) => (
   store: MiddlewareAPI
-) => (next: Dispatch) => (action: AnyAction): Promise<void> => {
+) => (next: Dispatch) => async (action: AnyAction): Promise<void> => {
   console.log('# Middleware');
-  return new Promise<AnyAction>(async (resolve) => {
+  const newAction = await new Promise<AnyAction>(async (resolve) => {
     const interceptor = interceptors.find((it) => it.type === action.type);
     resolve(
       interceptor ? await interceptor.handler(store.getState(), action) : action
     );
-  }).then((newAction: AnyAction) => {
-    next(newAction);
   });
+  next(newAction);
 };
 
 // ---- Interceptor ----
